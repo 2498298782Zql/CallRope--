@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TraceIdGenerator {
     private static final AtomicInteger atomicInteger = new AtomicInteger(1);
 
-    private static final ShardedTokenBucket tokenBucket;
+    public static final ShardedTokenBucket tokenBucket;
 
     static {
         tokenBucket = new ShardedTokenBucket(5, 100,5);

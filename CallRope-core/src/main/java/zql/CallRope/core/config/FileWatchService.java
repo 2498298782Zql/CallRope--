@@ -2,6 +2,8 @@ package zql.CallRope.core.config;
 
 import zql.CallRope.core.aspect.SpyImpl;
 import zql.CallRope.point.DoNothingSpy;
+import zql.CallRope.point.IDutils.ShardedTokenBucket;
+import zql.CallRope.point.IDutils.TraceIdGenerator;
 import zql.CallRope.point.SpyAPI;
 
 import java.io.File;
@@ -49,9 +51,15 @@ public class FileWatchService implements Runnable {
                 properties.load(fis);
                 String traceSwitch = properties.getProperty("TraceSwitch");
                 if ("true".equalsIgnoreCase(traceSwitch)) {
+                    System.out.println("Trace is true");
+                    TraceIdGenerator.tokenBucket.setTokensPerSecondForShard(0l);
+                    TraceIdGenerator.tokenBucket.setTokensPerSecondForShard(0l);
                     // TODO add to log
                     SpyAPI.setSpy(new SpyImpl());
                 } else if ("false".equalsIgnoreCase(traceSwitch)) {
+                    System.out.println("Trace is false");
+                    TraceIdGenerator.tokenBucket.setTokensPerSecondForShard(1l);
+                    TraceIdGenerator.tokenBucket.setBucketCapacityForShard(20);
                     // TODO add to log
                     SpyAPI.setSpy(new DoNothingSpy());
                 } else {

@@ -5,6 +5,10 @@ import zql.CallRope.point.model.Span;
 import java.util.Map;
 
 public final class DoNothingSpy implements SpySPI {
+
+    public DoNothingSpy() {
+    }
+
     @Override
     public void atEnter(Class<?> clazz, String methodInfo, Object target, Map<String, Object> infos) {
     }

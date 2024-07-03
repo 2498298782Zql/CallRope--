@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static zql.CallRope.core.config.Configuration.getProperty;
+
 public class SpyImpl implements SpySPI {
     private volatile static Map<String, MethodAspect> methodAspects;
 
@@ -28,7 +30,7 @@ public class SpyImpl implements SpySPI {
         SpyAPI.setSpy(new SpyImpl());
         try {
             // 开启调用链开关监视
-            FileWatchService fileWatchService = new FileWatchService(new String[]{"CallRope-core/src/main/resources/rope-swtich.properties"});
+            FileWatchService fileWatchService = new FileWatchService(new String[]{getProperty("trace.switch")});
             fileWatchService.start();
         } catch (Exception e) {
             e.printStackTrace();

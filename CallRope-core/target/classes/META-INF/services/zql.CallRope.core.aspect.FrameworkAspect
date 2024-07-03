@@ -1,0 +1,3 @@
+dubboProducerAspectImpl=zql.CallRope.core.aspect.aspectImpl.DubboProducerAspectImpl
+springFrameworkAspectImpl=zql.CallRope.core.aspect.aspectImpl.SpringFrameworkAspectImpl
+springServiceAspectImpl=zql.CallRope.core.aspect.aspectImpl.SpringServiceAspectImpl

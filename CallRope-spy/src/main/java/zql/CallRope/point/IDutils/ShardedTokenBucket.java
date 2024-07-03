@@ -4,17 +4,16 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ShardedTokenBucket {
-    private final long tokensPerSecond;
-    private final long bucketCapacity;
+    private long tokensPerSecond;
+    private long bucketCapacity;
     private final int numShards;
     private final Shard[] shardsBucket;
-    private final long tokensPerSecondForShard;
-    private final long bucketCapacityForShard;
+    private long tokensPerSecondForShard;
+    private long bucketCapacityForShard;
 
     private static class Shard {
         private final AtomicLong tokens;
         private final AtomicLong lastRefillTime;
-
         public Shard(long initalTokens) {
             this.tokens = new AtomicLong(initalTokens);
             this.lastRefillTime = new AtomicLong(System.nanoTime());
@@ -60,4 +59,19 @@ public class ShardedTokenBucket {
         }
     }
 
+    public void setTokensPerSecond(long tokensPerSecond) {
+        this.tokensPerSecond = tokensPerSecond;
+    }
+
+    public void setBucketCapacity(long bucketCapacity) {
+        this.bucketCapacity = bucketCapacity;
+    }
+
+    public void setTokensPerSecondForShard(long tokensPerSecondForShard) {
+        this.tokensPerSecondForShard = tokensPerSecondForShard;
+    }
+
+    public void setBucketCapacityForShard(long bucketCapacityForShard) {
+        this.bucketCapacityForShard = bucketCapacityForShard;
+    }
 }

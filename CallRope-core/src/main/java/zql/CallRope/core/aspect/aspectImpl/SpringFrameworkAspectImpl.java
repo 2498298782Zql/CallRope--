@@ -22,6 +22,7 @@ public class SpringFrameworkAspectImpl implements FrameworkAspect {
         span.setEnv(SpanEnvironment.TEST_ENVIRONMENT);
         SpanBuilder.fix(span);
         TraceInfos.spanTtl.set(span);
+        TraceInfos.traceIdTtl.set(span.traceId);
         return span;
     }
 
@@ -32,9 +33,7 @@ public class SpringFrameworkAspectImpl implements FrameworkAspect {
         span.duration = span.end - span.start;
         producer.onData(span);
         TraceInfos.spanTtl.remove();
+        TraceInfos.traceIdTtl.set(span.traceId);
         return span;
-    }
-    public void say(){
-        System.out.println("hi, i'm spring");
     }
 }
