@@ -1,7 +1,10 @@
 package zql.CallRope.core.instrumentation;
 
 import javassist.*;
+import javassist.bytecode.MethodInfo;
+import javassist.bytecode.ParameterAnnotationsAttribute;
 import javassist.bytecode.SignatureAttribute;
+import javassist.bytecode.annotation.Annotation;
 import zql.CallRope.core.util.JavassistUtils;
 import zql.CallRope.spi.annotation.SPIAuto;
 
@@ -42,11 +45,27 @@ public class SpringBootControllerTransformer implements transformer {
                         || ctMethod.hasAnnotation(DELETEMAPPING_ANNOTATION)) {
                     ClassPool classPool = ClassPool.getDefault();
                     CtClass request = classPool.get("javax.servlet.http.HttpServletRequest");
+
+                    MethodInfo methodInfo = ctMethod.getMethodInfo();
+                    ParameterAnnotationsAttribute parameterAnnotationsAttribute =
+                            (ParameterAnnotationsAttribute) methodInfo.getAttribute(ParameterAnnotationsAttribute.visibleTag);
+
+                    if (parameterAnnotationsAttribute == null) {
+                        parameterAnnotationsAttribute = new ParameterAnnotationsAttribute(methodInfo.getConstPool(), ParameterAnnotationsAttribute.visibleTag);
+                    }
+
+                    Annotation[][] paramArrays = parameterAnnotationsAttribute.getAnnotations();
                     ctMethod.insertParameter(request);
+                    Annotation[][] newParamArrays = new Annotation[paramArrays.length + 1][];
+                    System.arraycopy(paramArrays, 0, newParamArrays, 1, paramArrays.length);
+                    newParamArrays[0] = new Annotation[0]; // 新参数没有注解
+                    parameterAnnotationsAttribute.setAnnotations(newParamArrays);
+
                     String methodName = ctMethod.getName();
                     StringBuilder codeBefore = new StringBuilder();
                     codeBefore.append("\n");
                     codeBefore.append("javax.servlet.http.HttpServletRequest requestDuplicate= $1;\n");
+
                     codeBefore.append("String traceId = (String)requestDuplicate.getAttribute(\"CallRope-TraceId\");\n");
                     codeBefore.append("String pSpanId = (String)requestDuplicate.getAttribute(\"CallRope-pSpanId\");\n");
                     codeBefore.append("String spanId = (String)requestDuplicate.getAttribute(\"CallRope-spanId\");\n");
@@ -65,6 +84,7 @@ public class SpringBootControllerTransformer implements transformer {
                     classInfo.setModified();
                 }
             }
+            classInfo.getCtClass().writeFile("/root/");
         } catch (NotFoundException e) {
             e.printStackTrace();
         } catch (CannotCompileException e) {

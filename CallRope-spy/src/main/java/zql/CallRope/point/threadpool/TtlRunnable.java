@@ -5,6 +5,8 @@ import zql.CallRope.point.TraceInfos;
 import zql.CallRope.point.model.Span;
 import zql.CallRope.point.model.SpanBuilder;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static zql.CallRope.point.TraceInfos.isThreadNameWithPrefix;
@@ -27,10 +29,6 @@ public class TtlRunnable implements Runnable, TtlEnhanced {
 
     @Override
     public void run() {
-        if (!isThreadNameWithPrefix()) {
-            runnable.run();
-            return;
-        }
         Object captured = capturedRef.get();
         if (captured == null && releaseTtlValueReferenceAfterRun && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after run!");
@@ -54,7 +52,10 @@ public class TtlRunnable implements Runnable, TtlEnhanced {
         }
     }
 
-    public static TtlRunnable get(Runnable runnable) {
+    public static Runnable get(Runnable runnable) {
+        if (!isThreadNameWithPrefix()) {
+            return runnable;
+        }
         return create(runnable, false);
     }
 
@@ -65,5 +66,4 @@ public class TtlRunnable implements Runnable, TtlEnhanced {
         }
         return new TtlRunnable(runnable, releaseTtlValueReferenceAfterRun);
     }
-
 }

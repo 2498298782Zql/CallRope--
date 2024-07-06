@@ -13,14 +13,14 @@ public class AutoWrap {
         @Override
         public Runnable doAutoWrap(Runnable runnable) {
             if(runnable == null) return null;
-            TtlRunnable ttlRunnable = TtlRunnable.get(runnable);
+            Runnable ttlRunnable = TtlRunnable.get(runnable);
             return ttlRunnable;
         }
 
         @Override
         public <T> Callable<T> doAutoWrap(Callable<T> callable) {
             if(callable == null ) return null;
-            TtlCallable ttlCallable = TtlCallable.get(callable);
+            Callable<T> ttlCallable = TtlCallable.get(callable);
             return ttlCallable;
         }
     }

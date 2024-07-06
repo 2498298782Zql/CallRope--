@@ -24,9 +24,6 @@ public class TtlCallable<V> implements TtlEnhanced, Callable<V> {
 
     @Override
     public V call() throws Exception {
-        if (!isThreadNameWithPrefix()) {
-            return callable.call();
-        }
         final Object captured = capturedRef.get();
         if (captured == null || releaseTtlValueReferenceAfterCall && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after call!");
@@ -50,7 +47,10 @@ public class TtlCallable<V> implements TtlEnhanced, Callable<V> {
         }
     }
 
-    public static <V> TtlCallable get(Callable<V> callable) {
+    public static <V> Callable<V> get(Callable<V> callable) {
+        if (!isThreadNameWithPrefix()) {
+            return callable;
+        }
         return create(callable, false);
     }
 

@@ -22,6 +22,7 @@ public class SpringBootHandlerInteceptorTransformer implements transformer {
             return;
         }
         try {
+            System.out.println("加载成功");
             CtClass ctClass = classInfo.getCtClass();
             CtMethod preHandle = ctClass.getDeclaredMethod("preHandle");
             StringBuilder code = new StringBuilder();
@@ -30,6 +31,7 @@ public class SpringBootHandlerInteceptorTransformer implements transformer {
             code.append("String traceId = requestDuplicate.getHeader(\"TraceId\");\n");
             code.append("if (traceId == null || traceId.isEmpty()) {\n");
             code.append("    traceId = zql.CallRope.point.IDutils.TraceIdGenerator.tryGenerateTraceId();\n");
+            code.append("    System.out.println(traceId);\n");
             code.append("    requestDuplicate.setAttribute(\"CallRope-TraceId\", traceId);\n");
             code.append("}\n");
             code.append("}\n");
