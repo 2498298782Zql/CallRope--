@@ -1,6 +1,8 @@
 package zql.CallRope.point.threadpool;
 
-import java.util.concurrent.Callable;
+import java.util.concurrent.*;
+
+import static zql.CallRope.point.TraceInfos.isThreadNameWithPrefix;
 
 public class AutoWrap {
     public static Wrap autoWrap = new AutoWarpDoNothing();
@@ -20,6 +22,9 @@ public class AutoWrap {
         @Override
         public <T> Callable<T> doAutoWrap(Callable<T> callable) {
             if(callable == null ) return null;
+            if (!isThreadNameWithPrefix()) {
+                return callable;
+            }
             Callable<T> ttlCallable = TtlCallable.get(callable);
             return ttlCallable;
         }

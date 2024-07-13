@@ -48,9 +48,6 @@ public class TtlCallable<V> implements TtlEnhanced, Callable<V> {
     }
 
     public static <V> Callable<V> get(Callable<V> callable) {
-        if (!isThreadNameWithPrefix()) {
-            return callable;
-        }
         return create(callable, false);
     }
 

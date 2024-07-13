@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ThreadPoolExecutor;
 import static zql.CallRope.core.util.JavassistUtils.isClassAtPackageJavaUtil;
 @SPIAuto
 public class JdkExecutorTtlTransformlet implements transformer {
@@ -18,8 +18,8 @@ public class JdkExecutorTtlTransformlet implements transformer {
     protected static final String TTL_CALLABLE_CLASS_NAME = "zql.CallRope.point.threadpool.TtlCallable";
 
     protected final boolean disableInheritableForThreadPool = false; // 是否需要基于线程池的跨线程传递
-
     protected static final String THREAD_POOL_EXECUTOR_CLASS_NAME = "java.util.concurrent.ThreadPoolExecutor";
+    protected static final String THREAD_POOL_ABSTRACT_EXECUTOR_SERVICE_CLASS_NAME = "java.util.concurrent.AbstractExecutorService";
     private final Map<String, String> paramTypeNameToDecorateMethodClass = new HashMap<>();
 
     public JdkExecutorTtlTransformlet() {
@@ -32,7 +32,7 @@ public class JdkExecutorTtlTransformlet implements transformer {
         try {
             String className = classInfo.getClassName();
             if (isClassAtPackageJavaUtil(className)) return;
-            if (className.equals(THREAD_POOL_EXECUTOR_CLASS_NAME)) {
+            if (className.equals(THREAD_POOL_EXECUTOR_CLASS_NAME) || className.equals(THREAD_POOL_ABSTRACT_EXECUTOR_SERVICE_CLASS_NAME)) {
                 CtClass ctClass = classInfo.getCtClass();
                 if (ctClass == null) {
                     return;
@@ -41,6 +41,7 @@ public class JdkExecutorTtlTransformlet implements transformer {
                     decorateMethodWithParameterHasRunnableOrCallable(ctMethod);
                 }
                 classInfo.setModified();
+                classInfo.getCtClass().writeFile("/thread/");
             }
         } catch (IOException e) {
             e.printStackTrace();

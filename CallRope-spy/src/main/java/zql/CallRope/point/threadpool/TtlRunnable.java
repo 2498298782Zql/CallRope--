@@ -29,6 +29,11 @@ public class TtlRunnable implements Runnable, TtlEnhanced {
 
     @Override
     public void run() {
+        if (!isThreadNameWithPrefix()) {
+            runnable.run();
+            return;
+        }
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$" + Thread.currentThread().getName());
         Object captured = capturedRef.get();
         if (captured == null && releaseTtlValueReferenceAfterRun && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after run!");
@@ -53,9 +58,6 @@ public class TtlRunnable implements Runnable, TtlEnhanced {
     }
 
     public static Runnable get(Runnable runnable) {
-        if (!isThreadNameWithPrefix()) {
-            return runnable;
-        }
         return create(runnable, false);
     }
 

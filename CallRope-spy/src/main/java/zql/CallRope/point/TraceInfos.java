@@ -20,10 +20,12 @@ public class TraceInfos {
 
     static {
         threadPrefixSet = getPropertyAsSet("threadpool-name-prefix");
+        System.out.println(threadPrefixSet.size());
     }
 
     public static final boolean isThreadNameWithPrefix() {
         String currentThreadName = Thread.currentThread().getName();
+        System.out.println("++++" + Thread.currentThread().getName());
         return threadPrefixSet.stream().anyMatch(currentThreadName::startsWith);
     }
 
