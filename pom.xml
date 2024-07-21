@@ -12,7 +12,6 @@
         <module>CallRope-spy</module>
         <module>CallRope-core</module>
         <module>CallRope-agent</module>
-        <module>CallRope-example</module>
         <module>CallRope-CSPI</module>
     </modules>
 
@@ -20,6 +19,4 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-    <dependencies>
-    </dependencies>
 </project>

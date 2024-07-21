@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="CallRope-CSPI" />
         <module name="CallRope-agent" />
-        <module name="CallRope-example" />
         <module name="CallRope-spy" />
       </profile>
     </annotationProcessing>
@@ -18,6 +17,7 @@
       <module name="CallRope-dubbo-example" target="8" />
       <module name="CallRope-dubbo-facafe-api-example" target="8" />
       <module name="CallRope-dubbo-producer-example" target="8" />
+      <module name="CallRope-example" target="8" />
       <module name="CallRope-http-example" target="8" />
       <module name="consumer-example" target="8" />
       <module name="example-dubbo" target="8" />
